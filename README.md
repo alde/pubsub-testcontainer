@@ -1,6 +1,7 @@
 # Google PubSub testcontainer
 
-:warning: alpha
+:warning: alpha release, no guarantees
+:warning: hardcoded to require google-cloud-pubsub 1.48.0
 
 ## Installation
 
