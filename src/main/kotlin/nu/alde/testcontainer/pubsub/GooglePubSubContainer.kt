@@ -12,15 +12,15 @@ import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import java.io.IOException
 import java.util.*
 
-class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads constructor(dockerImageName: String = "google/cloud-sdk:latest") :
-    GenericContainer<SelfT>(dockerImageName) {
+class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads constructor(imageName: String = "google/cloud-sdk:latest") :
+    GenericContainer<SelfT>(imageName) {
     private var channelProvider: FixedTransportChannelProvider? = null
     private val credentialsProvider = NoCredentialsProvider.create()
 
     private val transportChannelProvider: FixedTransportChannelProvider
         get() {
             val channel = ManagedChannelBuilder.forAddress(
-                getContainerIpAddress(),
+                containerIpAddress,
                 getMappedPort(PUBSUB_PORT)
             ).usePlaintext().build()
 
@@ -30,7 +30,7 @@ class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads 
         }
 
     override fun configure() {
-        setStartupAttempts(3)
+        startupAttempts = 3
         withExposedPorts(PUBSUB_PORT)
         withCommand(
             "/bin/sh",
@@ -47,14 +47,14 @@ class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads 
     }
 
     @Throws(IOException::class)
-    fun createTopic(topicName: ProjectTopicName) {
+    fun createTopic(topic: ProjectTopicName) {
         val topicAdminClient = TopicAdminClient.create(
             TopicAdminSettings.newBuilder()
                 .setTransportChannelProvider(channelProvider)
                 .setCredentialsProvider(credentialsProvider)
                 .build()
         )
-        topicAdminClient.createTopic(topicName)
+        topicAdminClient.createTopic(topic)
     }
 
     @Throws(IOException::class)
@@ -79,8 +79,8 @@ class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads 
     }
 
     @Throws(IOException::class)
-    fun getPublisher(buildTopic: TopicName): Publisher {
-        return Publisher.newBuilder(buildTopic)
+    fun getPublisher(topic: TopicName): Publisher {
+        return Publisher.newBuilder(topic)
             .setChannelProvider(channelProvider)
             .setCredentialsProvider(credentialsProvider)
             .build()

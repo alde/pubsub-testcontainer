@@ -12,8 +12,14 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    api("com.google.cloud:google-cloud-pubsub:1.48.0")
-    api("org.testcontainers:testcontainers:1.11.2")
+
+    implementation("com.google.cloud:google-cloud-pubsub") {
+        version {
+            strictly("[1.45, 2[")
+            prefer("1.75.0")
+        }
+    }
+    implementation("org.testcontainers:testcontainers:1.11.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.4.2")
     testImplementation("org.awaitility:awaitility:3.1.6")
@@ -32,7 +38,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "nu.alde"
             artifactId = "pubsub-testcontainer"
-            version = "0.0.4"
+            version = "0.0.5"
 
             from(components["java"])
         }

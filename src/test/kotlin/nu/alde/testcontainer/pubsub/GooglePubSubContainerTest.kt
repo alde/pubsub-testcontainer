@@ -6,7 +6,6 @@ import com.google.pubsub.v1.ProjectTopicName
 import com.google.pubsub.v1.PubsubMessage
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility.await
-import org.junit.ClassRule
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -21,7 +20,6 @@ class GooglePubSubContainerTest {
         .of(PROJECT_ID, "my-subscription")
     private val messages = mutableListOf<PubsubMessage>()
 
-    @ClassRule
     val pubsubContainer: GooglePubSubContainer<*> = GooglePubSubContainer<Nothing>().apply {
         start()
     }
