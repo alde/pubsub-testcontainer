@@ -1,13 +1,15 @@
 # Google PubSub testcontainer
-
-:warning: alpha release, no guarantees
+[![CircleCI](https://circleci.com/gh/alde/pubsub-testcontainer/tree/master.svg?style=svg)](https://circleci.com/gh/alde/pubsub-testcontainer/tree/master)
+![Maven Central](https://img.shields.io/maven-central/v/nu.alde/pubsub-testcontainer.svg?style=flat-square)
 
 ## Installation
 
-```bash
-git clone git@github.com:alde/pubsub-testcontainer.git
-cd pubsub-testcontainer
-gradle publishToMavenLocal
+```xml
+<dependency>
+    <groupId>nu.alde</groupId>
+    <artifactId>pubsub-testcontainer</artifactId>
+    <version>0.0.5</version>
+</dependency>
 ```
   
 ## Usage

@@ -1,0 +1,49 @@
+version: 2.1
+jobs:
+  review:
+    machine: true
+    environment:
+      TERM: 'xterm-color'
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gradle-{{ checksum "build.gradle.kts" }}
+      - run: ./gradlew build
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: gradle-{{ checksum "build.gradle.kts" }}
+  master:
+    machine: true
+    environment:
+      TERM: 'xterm-color'
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gradle-{{ checksum "build.gradle.kts" }}
+      - run: "export PATH=$HOME/bin:$PATH"
+      - run: ln -s /usr/bin/gpg $HOME/bin/gpg2
+      - run:
+          name: import GPG key
+          command: echo -e "$GPG_KEY" | gpg --import
+      - run: ./gradlew build -Psigning.gnupg.keyName=$GPG_KEY_ID
+      - run: ./gradlew publish -Psigning.gnupg.keyName=$GPG_KEY_ID
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: gradle-{{ checksum "build.gradle.kts" }}
+
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - review:
+          filters:
+            branches:
+              ignore: master
+      - master:
+          filters:
+            branches:
+              only: master

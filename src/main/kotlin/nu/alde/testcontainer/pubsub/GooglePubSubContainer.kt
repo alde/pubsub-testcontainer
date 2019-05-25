@@ -42,10 +42,19 @@ class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads 
         )
     }
 
+    /**
+     *
+     */
     override fun containerIsStarted(containerInfo: InspectContainerResponse) {
         channelProvider = transportChannelProvider
     }
 
+    /**
+     * Create a topic in the pubsub emulator.
+     *
+     * @param topic
+     * @throws IOException
+     */
     @Throws(IOException::class)
     fun createTopic(topic: ProjectTopicName) {
         val topicAdminClient = TopicAdminClient.create(
@@ -57,6 +66,13 @@ class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads 
         topicAdminClient.createTopic(topic)
     }
 
+    /**
+     * Create a subscription on the given topic in the pubsub emulator
+     *
+     * @param topicName name of the topic
+     * @param name name of the subscription
+     * @throws IOException
+     */
     @Throws(IOException::class)
     fun createSubscription(
         topicName: ProjectTopicName,
@@ -78,6 +94,11 @@ class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads 
             )
     }
 
+    /**
+     * Get the publisher that can be used to publish messages on the topic
+     *
+     * @param topic Topic to publish to
+     */
     @Throws(IOException::class)
     fun getPublisher(topic: TopicName): Publisher {
         return Publisher.newBuilder(topic)
@@ -86,6 +107,11 @@ class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads 
             .build()
     }
 
+    /**
+     * Get a subscription by name
+     *
+     * @param name Name of the subscription to get
+     */
     fun getSubscription(name: ProjectSubscriptionName): Subscription {
         val subscriptionAdminClient = SubscriptionAdminClient.create(
             SubscriptionAdminSettings.newBuilder()
@@ -96,6 +122,12 @@ class GooglePubSubContainer<SelfT : GooglePubSubContainer<SelfT>> @JvmOverloads 
         return subscriptionAdminClient.getSubscription(name)
     }
 
+    /**
+     * Add a listener to a subscription. Events consumed will be put on the messageStore.
+     *
+     * @param subscriptionName Name of the subscription to listen to
+     * @param messageStore A mutable list where PubSub messages consumed will be stored
+     */
     fun subscribe(
         subscriptionName: ProjectSubscriptionName,
         messageStore: MutableList<PubsubMessage>
