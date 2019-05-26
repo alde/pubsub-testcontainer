@@ -14,7 +14,7 @@
 
 ## Issues
 
-Transitive dependencies of google-cloud-pubsub are messy
+Transitive dependencies of google-cloud-pubsub are messy, so you must explicitly depend on a version in your pom.xml if you use a 3rd party library wrapping it.
   
 ## Usage
 
