@@ -11,6 +11,10 @@
     <version>0.0.5</version>
 </dependency>
 ```
+
+## Issues
+
+Transitive dependencies of google-cloud-pubsub are messy
   
 ## Usage
 
